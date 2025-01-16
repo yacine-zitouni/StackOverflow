@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    // added by me
+    alias (libs.plugins.kotlin.ksp)
+    alias (libs.plugins.dagger.hilt)
+
 }
 
 android {
@@ -40,7 +44,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,4 +59,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // added by me
+    implementation (libs.androidx.compose.runtime)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.dagger.hilt.android)
+    ksp (libs.dagger.hilt.compiler)
+
 }

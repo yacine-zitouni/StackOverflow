@@ -65,5 +65,7 @@ dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.dagger.hilt.android)
     ksp (libs.dagger.hilt.compiler)
+    implementation(libs.retrofit)
+
 
 }

@@ -17,9 +17,11 @@ import javax.inject.Inject
 class ListViewModel @Inject constructor(private val repository: Repository): ViewModel(){
 
     private val _questionList: MutableLiveData<List<Question>> = MutableLiveData(emptyList())
+    val questionList: LiveData<List<Question>> = _questionList
 
     private val _isUpdating = MutableLiveData(false)
     val isUpdating: LiveData<Boolean> = _isUpdating
+
 
     fun updateList(){
         viewModelScope.launch(Dispatchers.IO){

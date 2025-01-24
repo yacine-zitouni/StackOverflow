@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,11 +21,9 @@ import fr.mastersid.zitouni.stackoverflow.viewModel.ListViewModel
 fun QuestionScreen(modifier: Modifier, listViewModel: ListViewModel = viewModel()){
 
 
-    val questionList = listOf(
-        Question(1, "Yacine's first question", 5),
-        Question(2, "Yacine's second question", 5),
-        Question(3, "Yacine's third question", 5)
-    )
+
+    val questionList by listViewModel.questionList.observeAsState(emptyList())
+
     Scaffold( modifier = Modifier) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding),

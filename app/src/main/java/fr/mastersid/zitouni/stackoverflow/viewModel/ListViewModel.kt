@@ -34,6 +34,9 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
                 }
             )
         }
+        else{
+            _questionList.postValue(questionList.value)
+        }
     }
 
     fun updateList(){

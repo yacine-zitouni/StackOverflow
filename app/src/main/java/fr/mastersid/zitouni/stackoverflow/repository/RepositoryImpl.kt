@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val webservice: Webservice
-): Repository {
+) : Repository {
 
     override val response: MutableStateFlow<Response> = MutableStateFlow(
         Response.Success(emptyList())
@@ -21,4 +21,6 @@ class RepositoryImpl @Inject constructor(
     override suspend fun updateData() {
         val list = webservice.getQuestionList()
         Log.d(" Webservice ", " list : $list ")
-       }}
+        response.emit(Response.Success(list))
+    }
+}

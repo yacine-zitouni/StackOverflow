@@ -19,20 +19,6 @@ class RepositoryImpl @Inject constructor(
     )
 
     override suspend fun updateData() {
-        webservice.getQuestionList()
-            .enqueue(
-            object: Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: retrofit2.Response<ResponseBody>
-                ) {
-                    Log.d(" Webservice ", "OK: ${response.body()?.string()}")
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d(" Webservice ", " Error : ${t.message}")
-                }
-
-            }
-
-            )}}
+        val list = webservice.getQuestionList()
+        Log.d(" Webservice ", " list : $list ")
+       }}

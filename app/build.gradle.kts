@@ -67,6 +67,8 @@ dependencies {
     ksp (libs.dagger.hilt.compiler)
     implementation(libs.retrofit)
     implementation(libs.androidx.material)
+    implementation (libs.moshi.kotlin)
+    implementation (libs.retrofit.converter.moshi)
 
 
 }

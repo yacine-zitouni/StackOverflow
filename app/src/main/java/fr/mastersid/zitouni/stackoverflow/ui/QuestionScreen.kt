@@ -18,32 +18,48 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.mastersid.zitouni.stackoverflow.data.Question
 import fr.mastersid.zitouni.stackoverflow.ui.theme.StackOverflowTheme
 import fr.mastersid.zitouni.stackoverflow.viewModel.ListViewModel
-import androidx.compose.material.Checkbox
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import fr.mastersid.zitouni.stackoverflow.repository.RepositoryDummyImpl
 
 @Composable
 fun QuestionScreen(modifier: Modifier, listViewModel: ListViewModel = viewModel()) {
     val questionList by listViewModel.questionList.observeAsState(emptyList())
     val refreshing: Boolean by listViewModel.isUpdating.observeAsState(false)
 
+    val showOnlyUnanswered by listViewModel.showOnlyUnanswered.observeAsState(false)
 
+    Scaffold(
+        modifier = modifier,
+        bottomBar = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Checkbox(
+                    checked = showOnlyUnanswered,
+                    onCheckedChange = { checked -> listViewModel.onShowOnlyUnanswered(checked) }
+                )
+                Text(
+                    text = "Show only unanswered questions",
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick =   listViewModel::updateList
+            ) {
 
-    Scaffold(modifier = modifier) { innerPadding ->
+            }
+        }
+    ) { innerPadding ->
         QuestionListScreen(
             modifier = Modifier.padding(innerPadding),
             questionList = questionList
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Checkbox(
-              checked = showOnlyUnanswered,
-                //onCheckedChange = { showOnlyUnanswered = it }
-            )
-            Text(
-                text = "Show only unanswered questions",
-            )
-        }
+
     }
 }
 
@@ -51,6 +67,6 @@ fun QuestionScreen(modifier: Modifier, listViewModel: ListViewModel = viewModel(
 @Composable
 fun QuestionScreenPreview() {
     StackOverflowTheme {
-        QuestionScreen(modifier = Modifier.safeDrawingPadding())
+        QuestionScreen(modifier = Modifier.safeDrawingPadding(), listViewModel = ListViewModel(RepositoryDummyImpl()))
     }
 }

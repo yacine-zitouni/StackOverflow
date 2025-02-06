@@ -13,10 +13,12 @@ import javax.inject.Singleton
 @InstallIn( SingletonComponent :: class )
 @Module
 object QuestionRoomDatabaseModule {
+
     @Provides
     fun provideWeatherDao ( questionRoomDatabase : QuestionRoomDatabase ) : QuestionDao {
         return questionRoomDatabase.questionDao()
     }
+
     @Provides
     @Singleton
     fun provideQuestionRoomDatabase (@ApplicationContext appContext: Context) : QuestionRoomDatabase {

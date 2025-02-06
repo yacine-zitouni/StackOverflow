@@ -9,6 +9,7 @@ import fr.mastersid.zitouni.stackoverflow.data.Question
 import fr.mastersid.zitouni.stackoverflow.repository.Repository
 import fr.mastersid.zitouni.stackoverflow.repository.Response
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +25,8 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
 
     private val _showOnlyUnanswered = MutableLiveData(false)
     val showOnlyUnanswered : LiveData<Boolean> = _showOnlyUnanswered
+
+    val errorMessage = MutableStateFlow<String?>(null)
 
     fun onShowOnlyUnanswered(checked: Boolean){
         _showOnlyUnanswered.postValue(checked)
@@ -53,6 +56,10 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
                     is Response.Success -> {
                         _questionList.postValue(response.list)
                         _isUpdating.postValue(false)
+                    }
+                    is Response.Error -> {
+                        _isUpdating.postValue(false)
+                        errorMessage.value = response.message
                     }
 
                 }                }

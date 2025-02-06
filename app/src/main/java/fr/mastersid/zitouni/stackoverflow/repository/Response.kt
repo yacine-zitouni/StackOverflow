@@ -9,5 +9,8 @@ sealed interface Response {
     @JvmInline
     value class Success(val list:  List <Question>): Response
 
+    @JvmInline
+    value class Error(val message: String) : Response
+
 
 }

@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 @Singleton
@@ -33,10 +35,16 @@ class RepositoryImpl @Inject constructor(
         }
     }
     override suspend fun updateData() {
-        val list = webservice.getQuestionList()
-        Log.d(" Webservice ", " list : $list ")
+        try {
+            val list = webservice.getQuestionList()
+            Log.d("Webservice", "List: $list")
 
-        questionDao.insertAll(list)
-        response.emit(Response.Success(list))
+            questionDao.insertAll(list)
+            response.emit(Response.Success(list))
+        } catch (e: IOException) {
+            response.emit(Response.Error("Network error"))
+        } catch (e: HttpException) {
+            response.emit(Response.Error("Request error"))
+        }
     }
 }

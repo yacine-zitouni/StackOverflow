@@ -67,6 +67,15 @@ fun QuestionScreen(modifier: Modifier = Modifier, listViewModel: ListViewModel =
                 Text(text = "Show only unanswered questions")
             }
         },
+        topBar = {
+            if (refreshing){
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+                 }
+            ,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = listViewModel::updateList

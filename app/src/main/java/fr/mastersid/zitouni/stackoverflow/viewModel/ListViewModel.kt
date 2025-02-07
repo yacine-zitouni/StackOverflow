@@ -23,24 +23,9 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
     private val _isUpdating = MutableLiveData(false)
     val isUpdating: LiveData<Boolean> = _isUpdating
 
-    private val _showOnlyUnanswered = MutableLiveData(false)
-    val showOnlyUnanswered : LiveData<Boolean> = _showOnlyUnanswered
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage : LiveData<String?> = _errorMessage
 
-    val errorMessage = MutableStateFlow<String?>(null)
-
-    fun onShowOnlyUnanswered(checked: Boolean){
-        _showOnlyUnanswered.postValue(checked)
-        if (checked){
-            _questionList.postValue(
-                questionList.value?.filter {
-                    question -> question.answerCount ==0
-                }
-            )
-        }
-        else{
-            _questionList.postValue(questionList.value)
-        }
-    }
 
     fun updateList(){
         viewModelScope.launch(Dispatchers.IO){
@@ -59,7 +44,7 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
                     }
                     is Response.Error -> {
                         _isUpdating.postValue(false)
-                        errorMessage.value = response.message
+                        _errorMessage.postValue( response.message )
                     }
 
                 }                }

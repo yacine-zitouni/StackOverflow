@@ -1,5 +1,6 @@
 package fr.mastersid.zitouni.stackoverflow.viewModel
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.mastersid.zitouni.stackoverflow.data.Question
 import fr.mastersid.zitouni.stackoverflow.repository.Repository
 import fr.mastersid.zitouni.stackoverflow.repository.Response
+import fr.mastersid.zitouni.stackoverflow.usecase.SendSmsUsecase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +17,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ListViewModel @Inject constructor(private val repository: Repository): ViewModel(){
+class ListViewModel @Inject constructor(
+    private val repository: Repository,
+    private val sendSmsUsecase: SendSmsUsecase
+): ViewModel(){
 
     private val _questionList: MutableLiveData<List<Question>> = MutableLiveData(emptyList())
     val questionList: LiveData<List<Question>> = _questionList
@@ -26,15 +31,18 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage : LiveData<String?> = _errorMessage
 
-    fun sendSms(){
-
-    }
-
     fun updateList(){
         viewModelScope.launch(Dispatchers.IO){
             repository.updateData()
         }
 
+    }
+
+    @SuppressLint("MissingPermission")
+    fun sendSms(message: String){
+        viewModelScope.launch(Dispatchers.IO){
+            sendSmsUsecase(message = message)
+        }
     }
     init {
         viewModelScope.launch(Dispatchers.IO){

@@ -1,9 +1,10 @@
 package fr.mastersid.zitouni.stackoverflow.ui
 
-import androidx.annotation.RestrictTo
+import android.content.Intent
+import android.net.Uri
+import android.provider.ContactsContract
+import android.provider.Settings
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
@@ -12,24 +13,28 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import fr.mastersid.zitouni.stackoverflow.data.Question
+import fr.mastersid.zitouni.stackoverflow.R
 import fr.mastersid.zitouni.stackoverflow.repository.RepositoryDummyImpl
 import fr.mastersid.zitouni.stackoverflow.ui.theme.StackOverflowTheme
 import fr.mastersid.zitouni.stackoverflow.viewModel.ListViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Scope
 
 @Composable
 fun QuestionScreen(modifier: Modifier = Modifier, listViewModel: ListViewModel = viewModel()) {
+
     val questionList by listViewModel.questionList.observeAsState(emptyList())
     val refreshing by listViewModel.isUpdating.observeAsState(false)
     val errorMessage by listViewModel.errorMessage.observeAsState(null)
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    val context = LocalContext.current
 
     var showOnlyUnanswered by rememberSaveable { mutableStateOf(false) }
 
@@ -92,7 +97,37 @@ fun QuestionScreen(modifier: Modifier = Modifier, listViewModel: ListViewModel =
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 8.dp), // Ajout d'un padding interne
             questionList = questionListFiltered,
-            onPermissionGranted = listViewModel::sendSms
+            onPermissionGranted = listViewModel::sendSms,
+            onPermissionDenied = {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.snackbar_permission_denied_message),
+                        duration = SnackbarDuration.Short,
+                        actionLabel = context.getString(R.string.snackbar_permission_denied_actionLabel)
+                    )
+                    if ( result == SnackbarResult.ActionPerformed){
+                        context.startActivity (
+                            Intent (
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:${context.packageName}")
+                            )
+                        )
+                    }
+                }
+            },
+            onPermissionNeedsExplanation = {  requestAgain ->
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar (
+                        message = context.getString(R.string.snackbar_permission_needs_explanation_message),
+                        duration = SnackbarDuration.Short ,
+                        actionLabel = context.getString(R.string.snackbar_permission_needs_explanation_actionLabel)
+                    )
+                    if ( result == SnackbarResult.ActionPerformed ) {
+                        requestAgain()
+                    }
+                }
+            }
+
         )
 
 
@@ -105,7 +140,10 @@ fun QuestionScreenPreview() {
     StackOverflowTheme {
         QuestionScreen(
             modifier = Modifier.safeDrawingPadding(),
-            listViewModel = ListViewModel(RepositoryDummyImpl())
+            listViewModel = ListViewModel(
+                RepositoryDummyImpl(),
+                sendSmsUsecase = TODO()
+            )
         )
     }
 }

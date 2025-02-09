@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">StackOverflow</string>
     <string name="send_sms_button_description">Send SMS</string>
+    <string name="snackbar_permission_denied_message">Permission Denied</string>
+    <string name="snackbar_permission_denied_actionLabel">Go to settings</string>
+    <string name="snackbar_permission_needs_explanation_actionLabel">Allow</string>
+    <string name="snackbar_permission_needs_explanation_message">Permission needed to send SMS</string>
+
+
+
 
 </resources>

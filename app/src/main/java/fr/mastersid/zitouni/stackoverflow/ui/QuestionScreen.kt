@@ -91,7 +91,8 @@ fun QuestionScreen(modifier: Modifier = Modifier, listViewModel: ListViewModel =
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 8.dp), // Ajout d'un padding interne
-            questionList = questionListFiltered
+            questionList = questionListFiltered,
+            onPermissionGranted = listViewModel::sendSms
         )
 
 

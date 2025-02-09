@@ -26,6 +26,9 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage : LiveData<String?> = _errorMessage
 
+    fun sendSms(){
+
+    }
 
     fun updateList(){
         viewModelScope.launch(Dispatchers.IO){

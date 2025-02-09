@@ -15,7 +15,7 @@ import fr.mastersid.zitouni.stackoverflow.viewModel.ListViewModel
 
 
 @Composable
-fun QuestionListScreen(modifier: Modifier, questionList: List<Question>) {
+fun QuestionListScreen(modifier: Modifier, questionList: List<Question>,onPermissionGranted:()-> Unit) {
 
 
     LazyColumn(
@@ -23,7 +23,7 @@ fun QuestionListScreen(modifier: Modifier, questionList: List<Question>) {
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         items(questionList) { question ->
-            QuestionRow(question)
+            QuestionRow(question, onPermissionGranted)
         }
     }
 }

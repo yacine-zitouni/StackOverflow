@@ -19,7 +19,7 @@ import fr.mastersid.zitouni.stackoverflow.ui.theme.StackOverflowTheme
 import androidx.compose.ui.res.stringResource
 
 @Composable
-fun QuestionRow (question: Question){
+fun QuestionRow (question: Question, onPermissionGranted:()-> Unit){
     Row( horizontalArrangement = Arrangement.spacedBy( 16.dp ),
         verticalAlignment = Alignment.CenterVertically
     ){
@@ -30,12 +30,9 @@ fun QuestionRow (question: Question){
             modifier = Modifier.weight(1f)
         )
         Text( text = question.answerCount.toString())
-        Button(
-            onClick={},
-        ){
-            Icon(Icons.Default.Email,
-               contentDescription = stringResource(id= R.string.send_sms_button_description))
-        }
+        SendSmsButton(
+            onPermissionGranted = onPermissionGranted
+        )
     }
 }
 

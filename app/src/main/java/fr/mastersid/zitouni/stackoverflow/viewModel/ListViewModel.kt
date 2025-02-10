@@ -6,16 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.mastersid.zitouni.stackoverflow.data.Question
-import fr.mastersid.zitouni.stackoverflow.repository.Repository
 import fr.mastersid.zitouni.stackoverflow.repository.Response
+import fr.mastersid.zitouni.stackoverflow.usecase.GetResponseFlowUseCase
+import fr.mastersid.zitouni.stackoverflow.usecase.UpdateDataUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class ListViewModel @Inject constructor(private val repository: Repository): ViewModel(){
+class ListViewModel @Inject constructor(
+    private val getResponseFlowUseCase: GetResponseFlowUseCase,
+    private val updateDataUseCase: UpdateDataUseCase
+): ViewModel(){
 
     private val _questionList: MutableLiveData<List<Question>> = MutableLiveData(emptyList())
     val questionList: LiveData<List<Question>> = _questionList
@@ -29,13 +32,13 @@ class ListViewModel @Inject constructor(private val repository: Repository): Vie
 
     fun updateList(){
         viewModelScope.launch(Dispatchers.IO){
-            repository.updateData()
+            updateDataUseCase()
         }
 
     }
     init {
         viewModelScope.launch(Dispatchers.IO){
-            repository.response.collect{ response ->
+            getResponseFlowUseCase().collect{ response ->
                 when( response) {
                     is Response.Pending -> _isUpdating.postValue(true)
                     is Response.Success -> {

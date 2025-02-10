@@ -98,13 +98,4 @@ fun QuestionScreen(modifier: Modifier = Modifier, listViewModel: ListViewModel =
     }
 }
 
-@Preview(showBackground = true, widthDp = 400, name = "test")
-@Composable
-fun QuestionScreenPreview() {
-    StackOverflowTheme {
-        QuestionScreen(
-            modifier = Modifier.safeDrawingPadding(),
-            listViewModel = ListViewModel(RepositoryDummyImpl())
-        )
-    }
-}
+

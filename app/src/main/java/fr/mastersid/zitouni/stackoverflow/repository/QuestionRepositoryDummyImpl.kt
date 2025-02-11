@@ -5,16 +5,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
-class RepositoryDummyImpl @Inject constructor(): Repository {
+class QuestionRepositoryDummyImpl @Inject constructor(): QuestionRepository {
 
-    override val response: MutableStateFlow<Response> = MutableStateFlow(
-        Response.Success(emptyList())
+    override val questionResponse: MutableStateFlow<QuestionResponse> = MutableStateFlow(
+        QuestionResponse.Success(emptyList())
     )
 
     override suspend fun updateData() {
-        response.emit(Response.Pending)
+        questionResponse.emit(QuestionResponse.Pending)
         delay(1000)
-        response.emit(Response.Success(
+        questionResponse.emit(QuestionResponse.Success(
             listOf(
                 Question(1, "How to learn Jetpack Compose?", 5),
                 Question(2, "What is the best way to manage state in Compose?", 3),

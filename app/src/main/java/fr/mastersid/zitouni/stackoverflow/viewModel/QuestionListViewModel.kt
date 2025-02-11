@@ -6,18 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.mastersid.zitouni.stackoverflow.data.Question
-import fr.mastersid.zitouni.stackoverflow.repository.Response
-import fr.mastersid.zitouni.stackoverflow.usecase.GetResponseFlowUseCase
-import fr.mastersid.zitouni.stackoverflow.usecase.UpdateDataUseCase
+import fr.mastersid.zitouni.stackoverflow.repository.QuestionResponse
+import fr.mastersid.zitouni.stackoverflow.usecase.GetQuestionResponseFlowUseCase
+import fr.mastersid.zitouni.stackoverflow.usecase.UpdateQuestionDataUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class ListViewModel @Inject constructor(
-    private val getResponseFlowUseCase: GetResponseFlowUseCase,
-    private val updateDataUseCase: UpdateDataUseCase
+class QuestionListViewModel @Inject constructor(
+    private val getQuestionResponseFlowUseCase: GetQuestionResponseFlowUseCase,
+    private val updateQuestionDataUseCase: UpdateQuestionDataUseCase
 ): ViewModel(){
 
     private val _questionList: MutableLiveData<List<Question>> = MutableLiveData(emptyList())
@@ -32,20 +32,20 @@ class ListViewModel @Inject constructor(
 
     fun updateList(){
         viewModelScope.launch(Dispatchers.IO){
-            updateDataUseCase()
+            updateQuestionDataUseCase()
         }
 
     }
     init {
         viewModelScope.launch(Dispatchers.IO){
-            getResponseFlowUseCase().collect{ response ->
+            getQuestionResponseFlowUseCase().collect{ response ->
                 when( response) {
-                    is Response.Pending -> _isUpdating.postValue(true)
-                    is Response.Success -> {
+                    is QuestionResponse.Pending -> _isUpdating.postValue(true)
+                    is QuestionResponse.Success -> {
                         _questionList.postValue(response.list)
                         _isUpdating.postValue(false)
                     }
-                    is Response.Error -> {
+                    is QuestionResponse.Error -> {
                         _isUpdating.postValue(false)
                         _errorMessage.postValue( response.message )
                     }

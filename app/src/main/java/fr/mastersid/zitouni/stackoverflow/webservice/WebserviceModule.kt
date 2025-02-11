@@ -30,7 +30,7 @@ object WebserviceModule {
             .build()
     }
     @Provides
-    fun provideWebservice ( retrofit : Retrofit ) : Webservice {
-        return retrofit.create(Webservice::class.java )
+    fun provideWebservice ( retrofit : Retrofit ) : QuestionWebservice {
+        return retrofit.create(QuestionWebservice::class.java )
     }
 }
